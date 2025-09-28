@@ -2,97 +2,211 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, beforeEach } from 'vitest'
 import { ConversionForm } from '@/components/ConversionForm'
+import type { ExchangeRates } from '@/types'
 
 describe('ConversionForm Component', () => {
-  const mockCurrencies = [
-    {
-      id: 'USD',
-      country: 'USA',
-      currency: 'dollar',
-      amount: 1,
-      code: 'USD',
-      rate: 23.285,
-      lastUpdated: new Date()
-    },
-    {
-      id: 'EUR',
-      country: 'EMU',
-      currency: 'euro',
-      amount: 1,
-      code: 'EUR',
-      rate: 25.285,
-      lastUpdated: new Date()
-    }
-  ]
+  const mockExchangeRates: ExchangeRates = {
+    date: new Date('2024-09-27'),
+    rates: [
+      {
+        id: 'USD',
+        country: 'USA',
+        currency: 'dollar',
+        amount: 1,
+        code: 'USD',
+        rate: 23.285,
+        lastUpdated: new Date()
+      },
+      {
+        id: 'EUR',
+        country: 'EMU',
+        currency: 'euro',
+        amount: 1,
+        code: 'EUR',
+        rate: 25.285,
+        lastUpdated: new Date()
+      },
+      {
+        id: 'JPY',
+        country: 'Japan',
+        currency: 'yen',
+        amount: 100,
+        code: 'JPY',
+        rate: 13.919,
+        lastUpdated: new Date()
+      },
+      {
+        id: 'ISK',
+        country: 'Iceland',
+        currency: 'krona',
+        amount: 100,
+        code: 'ISK',
+        rate: 17.134,
+        lastUpdated: new Date()
+      }
+    ],
+    fetchedAt: new Date()
+  }
 
-  const mockOnConvert = vi.fn()
-
-  beforeEach(() => {
-    mockOnConvert.mockClear()
-  })
-
+  
   it('should render form with amount input and currency dropdown', () => {
     render(
       <ConversionForm
-        availableCurrencies={mockCurrencies}
-        onConvert={mockOnConvert}
+        amount=""
+        selectedCurrency=""
+        conversionErrors={{}}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={vi.fn()}
+        onCurrencyChange={vi.fn()}
+        onSubmit={vi.fn()}
       />
     )
 
-    expect(screen.getByLabelText('Amount in CZK')).toBeInTheDocument()
-    expect(screen.getByLabelText('Convert to')).toBeInTheDocument()
-    expect(screen.getByText('Convert')).toBeInTheDocument()
+    expect(screen.getByLabelText('Amount (CZK)')).toBeInTheDocument()
+    expect(screen.getByLabelText('To Currency')).toBeInTheDocument()
+    expect(screen.getByText('Convert Currency')).toBeInTheDocument()
   })
 
   it('should validate amount input', async () => {
     const user = userEvent.setup()
+    const onAmountChange = vi.fn()
+    const onCurrencyChange = vi.fn()
+    const onSubmit = vi.fn()
+
     render(
       <ConversionForm
-        availableCurrencies={mockCurrencies}
-        onConvert={mockOnConvert}
+        amount="-100"
+        selectedCurrency="USD"
+        conversionErrors={{ amount: 'Amount must be positive' }}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={onAmountChange}
+        onCurrencyChange={onCurrencyChange}
+        onSubmit={onSubmit}
       />
     )
-
-    const amountInput = screen.getByLabelText('Amount in CZK')
-    await user.type(amountInput, '-100')
 
     expect(screen.getByText('Amount must be positive')).toBeInTheDocument()
   })
 
-  it('should call onConvert with correct parameters', async () => {
+  it('should call onSubmit with correct parameters', async () => {
     const user = userEvent.setup()
+    const onAmountChange = vi.fn()
+    const onCurrencyChange = vi.fn()
+    const onSubmit = vi.fn()
+
     render(
       <ConversionForm
-        availableCurrencies={mockCurrencies}
-        onConvert={mockOnConvert}
+        amount="1000"
+        selectedCurrency="USD"
+        conversionErrors={{}}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={onAmountChange}
+        onCurrencyChange={onCurrencyChange}
+        onSubmit={onSubmit}
       />
     )
 
-    const amountInput = screen.getByLabelText('Amount in CZK')
-    const currencySelect = screen.getByLabelText('Convert to')
-    const convertButton = screen.getByText('Convert')
-
-    await user.type(amountInput, '1000')
-    await user.selectOptions(currencySelect, 'USD')
+    const convertButton = screen.getByText('Convert Currency')
     await user.click(convertButton)
 
-    expect(mockOnConvert).toHaveBeenCalledWith({
-      amountCZK: 1000,
-      targetCurrency: 'USD',
-      timestamp: expect.any(Date)
-    })
+    expect(onSubmit).toHaveBeenCalled()
+  })
+
+  it('should display correct exchange rate for 1-unit currencies', () => {
+    const onAmountChange = vi.fn()
+    const onCurrencyChange = vi.fn()
+    const onSubmit = vi.fn()
+
+    render(
+      <ConversionForm
+        amount="1000"
+        selectedCurrency="USD"
+        conversionErrors={{}}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={onAmountChange}
+        onCurrencyChange={onCurrencyChange}
+        onSubmit={onSubmit}
+      />
+    )
+
+    expect(screen.getByText('1 USD = 23.285 CZK')).toBeInTheDocument()
+  })
+
+  it('should display correct exchange rate for multi-unit currencies', () => {
+    const onAmountChange = vi.fn()
+    const onCurrencyChange = vi.fn()
+    const onSubmit = vi.fn()
+
+    render(
+      <ConversionForm
+        amount="1000"
+        selectedCurrency="JPY"
+        conversionErrors={{}}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={onAmountChange}
+        onCurrencyChange={onCurrencyChange}
+        onSubmit={onSubmit}
+      />
+    )
+
+    expect(screen.getByText('100 JPY = 13.919 CZK')).toBeInTheDocument()
+  })
+
+  it('should display correct exchange rate for ISK (100 units)', () => {
+    const onAmountChange = vi.fn()
+    const onCurrencyChange = vi.fn()
+    const onSubmit = vi.fn()
+
+    render(
+      <ConversionForm
+        amount="500"
+        selectedCurrency="ISK"
+        conversionErrors={{}}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={onAmountChange}
+        onCurrencyChange={onCurrencyChange}
+        onSubmit={onSubmit}
+      />
+    )
+
+    expect(screen.getByText('100 ISK = 17.134 CZK')).toBeInTheDocument()
+  })
+
+  it('should not show exchange rate when no currency is selected', () => {
+    const onAmountChange = vi.fn()
+    const onCurrencyChange = vi.fn()
+    const onSubmit = vi.fn()
+
+    render(
+      <ConversionForm
+        amount="1000"
+        selectedCurrency=""
+        conversionErrors={{}}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={onAmountChange}
+        onCurrencyChange={onCurrencyChange}
+        onSubmit={onSubmit}
+      />
+    )
+
+    expect(screen.queryByText(/CZK/)).not.toBeInTheDocument()
   })
 
   it('should handle loading state', () => {
     render(
       <ConversionForm
-        availableCurrencies={mockCurrencies}
-        onConvert={mockOnConvert}
+        amount=""
+        selectedCurrency=""
+        conversionErrors={{}}
+        exchangeRates={mockExchangeRates}
+        onAmountChange={vi.fn()}
+        onCurrencyChange={vi.fn()}
+        onSubmit={vi.fn()}
         isLoading={true}
       />
     )
 
     expect(screen.getByText('Converting...')).toBeInTheDocument()
-    expect(screen.getByText('Convert')).toBeDisabled()
+    expect(screen.getByText('Convert Currency')).toBeDisabled()
   })
 })
