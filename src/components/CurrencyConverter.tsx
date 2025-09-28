@@ -3,7 +3,6 @@ import { Button } from './Button'
 import { ErrorMessage } from './ErrorMessage'
 import { CurrencyList } from './CurrencyList'
 import { ConversionForm } from './ConversionForm'
-import { ConversionResult } from './ConversionResult'
 import { useCurrencyRates, useCurrencyConversion } from '@/hooks'
 
 const Container = styled.div`
@@ -142,24 +141,11 @@ export function CurrencyConverter() {
     setAmount,
     selectedCurrency,
     setCurrency,
-    conversionResult,
-    errors,
-    isCalculating,
-    calculateNow,
-    resetConversion
+    errors
   } = useCurrencyConversion(exchangeRates, {
     autoCalculate: true,
     debounceMs: 300
   })
-
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    calculateNow()
-  }
-
-  const handleConvertAgain = () => {
-    resetConversion()
-  }
 
   const dismissError = () => {
     refetch()
@@ -231,18 +217,7 @@ export function CurrencyConverter() {
             exchangeRates={exchangeRates}
             onAmountChange={setAmount}
             onCurrencyChange={setCurrency}
-            onSubmit={handleFormSubmit}
-            isLoading={isCalculating}
           />
-
-          {(conversionResult || isCalculating) && (
-            <ConversionResult
-              result={conversionResult}
-              isLoading={isCalculating}
-              error={errors.conversion}
-              onConvertAgain={handleConvertAgain}
-            />
-          )}
         </MainContent>
 
         <SideContent>
