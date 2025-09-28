@@ -1,29 +1,36 @@
-import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { CurrencyConverter } from '@/components/CurrencyConverter'
-import { useCurrencyRates, useCurrencyConversion } from '@/hooks'
+import {
+  render,
+  screen,
+} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { CurrencyConverter } from '@/components/CurrencyConverter';
+import { useCurrencyRates, useCurrencyConversion } from '@/hooks';
 
-vi.mock('@/hooks/useCurrencyRates')
-vi.mock('@/hooks/useCurrencyConversion')
+vi.mock('@/hooks/useCurrencyRates');
+vi.mock('@/hooks/useCurrencyConversion');
 
-const mockUseCurrencyRates = useCurrencyRates as ReturnType<typeof vi.mocked<typeof useCurrencyRates>>
-const mockUseCurrencyConversion = useCurrencyConversion as ReturnType<typeof vi.mocked<typeof useCurrencyConversion>>
+const mockUseCurrencyRates = useCurrencyRates as ReturnType<
+  typeof vi.mocked<typeof useCurrencyRates>
+>;
+const mockUseCurrencyConversion = useCurrencyConversion as ReturnType<
+  typeof vi.mocked<typeof useCurrencyConversion>
+>;
 
 describe('Error Handling Integration Flow', () => {
-  const user = userEvent.setup()
+  const user = userEvent.setup();
 
   beforeEach(() => {
-    vi.clearAllMocks()
-  })
+    vi.clearAllMocks();
+  });
 
   it('should display network error message when rates fetch fails', () => {
     mockUseCurrencyRates.mockReturnValue({
       exchangeRates: null,
       isLoading: false,
       error: 'Failed to fetch exchange rates',
-      refetch: vi.fn()
-    })
+      refetch: vi.fn(),
+    });
 
     mockUseCurrencyConversion.mockReturnValue({
       amount: '',
@@ -31,23 +38,25 @@ describe('Error Handling Integration Flow', () => {
       selectedCurrency: '',
       setCurrency: vi.fn(),
       conversionResult: null,
-      errors: {}
-    })
+      errors: {},
+    });
 
-    render(<CurrencyConverter />)
+    render(<CurrencyConverter />);
 
-    expect(screen.getByText('Failed to fetch exchange rates')).toBeInTheDocument()
-    expect(screen.getByText('Retry')).toBeInTheDocument()
-  })
+    expect(screen.getAllByText('Failed to fetch exchange rates')).toHaveLength(
+      2
+    );
+    expect(screen.getAllByText('Retry')).toHaveLength(2);
+  });
 
   it('should allow retry after network error', async () => {
-    const refetch = vi.fn()
+    const refetch = vi.fn();
     mockUseCurrencyRates.mockReturnValue({
       exchangeRates: null,
       isLoading: false,
       error: 'Network error',
-      refetch
-    })
+      refetch,
+    });
 
     mockUseCurrencyConversion.mockReturnValue({
       amount: '',
@@ -55,16 +64,16 @@ describe('Error Handling Integration Flow', () => {
       selectedCurrency: '',
       setCurrency: vi.fn(),
       conversionResult: null,
-      errors: {}
-    })
+      errors: {},
+    });
 
-    render(<CurrencyConverter />)
+    render(<CurrencyConverter />);
 
-    const retryButton = screen.getByText('Retry')
-    await user.click(retryButton)
+    const retryButtons = screen.getAllByText('Retry');
+    await user.click(retryButtons[0]);
 
-    expect(refetch).toHaveBeenCalled()
-  })
+    expect(refetch).toHaveBeenCalled();
+  });
 
   it('should display validation errors for invalid amount', () => {
     const mockExchangeRates = {
@@ -77,18 +86,18 @@ describe('Error Handling Integration Flow', () => {
           amount: 1,
           code: 'USD',
           rate: 23.285,
-          lastUpdated: new Date()
-        }
+          lastUpdated: new Date(),
+        },
       ],
-      fetchedAt: new Date()
-    }
+      fetchedAt: new Date(),
+    };
 
     mockUseCurrencyRates.mockReturnValue({
       exchangeRates: mockExchangeRates,
       isLoading: false,
       error: null,
-      refetch: vi.fn()
-    })
+      refetch: vi.fn(),
+    });
 
     mockUseCurrencyConversion.mockReturnValue({
       amount: '-100',
@@ -96,13 +105,13 @@ describe('Error Handling Integration Flow', () => {
       selectedCurrency: 'USD',
       setCurrency: vi.fn(),
       conversionResult: null,
-      errors: { amount: 'Amount must be positive' }
-    })
+      errors: { amount: 'Amount must be positive' },
+    });
 
-    render(<CurrencyConverter />)
+    render(<CurrencyConverter />);
 
-    expect(screen.getByText('Amount must be positive')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Amount must be positive')).toBeInTheDocument();
+  });
 
   it('should display error when currency not found', () => {
     const mockExchangeRates = {
@@ -115,18 +124,18 @@ describe('Error Handling Integration Flow', () => {
           amount: 1,
           code: 'USD',
           rate: 23.285,
-          lastUpdated: new Date()
-        }
+          lastUpdated: new Date(),
+        },
       ],
-      fetchedAt: new Date()
-    }
+      fetchedAt: new Date(),
+    };
 
     mockUseCurrencyRates.mockReturnValue({
       exchangeRates: mockExchangeRates,
       isLoading: false,
       error: null,
-      refetch: vi.fn()
-    })
+      refetch: vi.fn(),
+    });
 
     mockUseCurrencyConversion.mockReturnValue({
       amount: '1000',
@@ -134,13 +143,13 @@ describe('Error Handling Integration Flow', () => {
       selectedCurrency: 'INVALID',
       setCurrency: vi.fn(),
       conversionResult: null,
-      errors: { currency: 'Currency not found' }
-    })
+      errors: { currency: 'Currency not found' },
+    });
 
-    render(<CurrencyConverter />)
+    render(<CurrencyConverter />);
 
-    expect(screen.getByText('Currency not found')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Currency not found')).toBeInTheDocument();
+  });
 
   it('should handle conversion calculation errors', () => {
     const mockExchangeRates = {
@@ -153,18 +162,18 @@ describe('Error Handling Integration Flow', () => {
           amount: 1,
           code: 'USD',
           rate: 23.285,
-          lastUpdated: new Date()
-        }
+          lastUpdated: new Date(),
+        },
       ],
-      fetchedAt: new Date()
-    }
+      fetchedAt: new Date(),
+    };
 
     mockUseCurrencyRates.mockReturnValue({
       exchangeRates: mockExchangeRates,
       isLoading: false,
       error: null,
-      refetch: vi.fn()
-    })
+      refetch: vi.fn(),
+    });
 
     mockUseCurrencyConversion.mockReturnValue({
       amount: '1000',
@@ -172,11 +181,13 @@ describe('Error Handling Integration Flow', () => {
       selectedCurrency: 'USD',
       setCurrency: vi.fn(),
       conversionResult: null,
-      errors: { conversion: 'Conversion calculation failed' }
-    })
+      errors: { conversion: 'Conversion calculation failed' },
+    });
 
-    render(<CurrencyConverter />)
+    render(<CurrencyConverter />);
 
-    expect(screen.getByText('Conversion calculation failed')).toBeInTheDocument()
-  })
-})
+    expect(
+      screen.getByText('Conversion calculation failed')
+    ).toBeInTheDocument();
+  });
+});

@@ -55,4 +55,4 @@ module.exports = {
     },
   },
   ignorePatterns: ['dist', 'node_modules', 'coverage', 'vite.config.ts'],
-}
+};
