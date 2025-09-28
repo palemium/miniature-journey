@@ -1,7 +1,6 @@
 import styled from 'styled-components'
-import { Button } from './Button'
 import { ErrorMessage } from './ErrorMessage'
-import { formatExchangeRate } from '@/utils/conversionCalculator'
+import { formatExchangeRate, formatCurrency } from '@/utils/conversionCalculator'
 import { ExchangeRates, ConversionErrors } from '@/types'
 
 interface ConversionFormProps {
@@ -11,12 +10,11 @@ interface ConversionFormProps {
   exchangeRates: ExchangeRates | null
   onAmountChange: (amount: string) => void
   onCurrencyChange: (currency: string) => void
-  onSubmit: (e: React.FormEvent) => void
   isLoading?: boolean
   className?: string
 }
 
-const FormContainer = styled.form`
+const FormContainer = styled.div`
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
   border-radius: 12px;
@@ -94,10 +92,6 @@ const ErrorMessageStyled = styled(ErrorMessage)`
   margin-bottom: 1rem;
 `
 
-const SubmitButton = styled(Button)`
-  width: 100%;
-  margin-top: 1rem;
-`
 
 const HelpText = styled.div`
   font-size: 0.75rem;
@@ -112,6 +106,32 @@ const CurrencyDisplay = styled.div`
   margin-top: 0.25rem;
 `
 
+const ConversionResult = styled.div`
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+  font-size: 0.875rem;
+`
+
+const ConversionAmount = styled.div`
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #28a745;
+  margin-bottom: 0.75rem;
+`
+
+const ExchangeRateText = styled.div`
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+`
+
+const DateInfo = styled.div`
+  color: #6c757d;
+  font-size: 0.8125rem;
+`
+
 export function ConversionForm({
   amount,
   selectedCurrency,
@@ -119,7 +139,6 @@ export function ConversionForm({
   exchangeRates,
   onAmountChange,
   onCurrencyChange,
-  onSubmit,
   isLoading = false,
   className
 }: ConversionFormProps) {
@@ -138,8 +157,16 @@ export function ConversionForm({
     rate => rate.code === selectedCurrency
   )
 
+  const amountNum = parseFloat(amount)
+  const isValidConversion = !isNaN(amountNum) && amountNum > 0 && selectedRate && !conversionErrors.amount && !conversionErrors.currency
+
+  let convertedAmount = 0
+  if (isValidConversion) {
+    convertedAmount = amountNum / (selectedRate.rate / selectedRate.amount)
+  }
+
   return (
-    <FormContainer onSubmit={onSubmit} className={className}>
+    <FormContainer className={className}>
       <Title>Currency Converter</Title>
 
       {conversionErrors.conversion && (
@@ -209,13 +236,19 @@ export function ConversionForm({
         </FormGroup>
       </FormGrid>
 
-      <SubmitButton
-        type="submit"
-        variant="primary"
-        disabled={isLoading || !amount || !selectedCurrency || !!conversionErrors.amount || !!conversionErrors.currency}
-      >
-        {isLoading ? 'Converting...' : 'Convert Currency'}
-      </SubmitButton>
+      {isValidConversion && (
+        <ConversionResult>
+          <ConversionAmount>
+            {formatCurrency(amountNum, 'CZK')} = {formatCurrency(convertedAmount, selectedRate.code)}
+          </ConversionAmount>
+          <ExchangeRateText>
+            Exchange rate: 1 {selectedRate.code} = {(selectedRate.rate / selectedRate.amount).toFixed(3)} CZK
+          </ExchangeRateText>
+          <DateInfo>
+            Rate date: {new Date(exchangeRates.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </DateInfo>
+        </ConversionResult>
+      )}
     </FormContainer>
   )
 }
