@@ -188,7 +188,7 @@ export function ConversionForm({
             onChange={(e) => onAmountChange(e.target.value)}
             placeholder="Enter amount in CZK"
             min="0"
-            step="0.01"
+            step="1"
             max="1000000"
             hasError={!!conversionErrors.amount}
             disabled={isLoading}
