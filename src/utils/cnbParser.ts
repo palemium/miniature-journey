@@ -13,7 +13,7 @@ export function parseCnbTextResponse(text: string): CnbParsedData {
   }
 
   const dateLine = lines[0]
-  const dateMatch = dateLine.match(/(\d{1,2}) (\w{3}) (\d{4})/)
+  const dateMatch = dateLine.match(/(\d{1,2}) (\w{3}) (\d{4})/) || dateLine.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/)
 
   if (!dateMatch) {
     throw new Error('Invalid date format in response')
@@ -41,7 +41,7 @@ export function parseCnbTextResponse(text: string): CnbParsedData {
     const [country, currency, amountStr, code, rateStr] = parts
 
     const amount = parseFloat(amountStr)
-    const rate = parseFloat(rateStr.replace(',', '.'))
+    const rate = parseFloat(rateStr.replace(',', '.').replace(/\s/g, ''))
 
     if (isNaN(amount) || isNaN(rate)) {
       throw new Error(`Invalid numeric values on line ${i + 1}: ${line}`)
