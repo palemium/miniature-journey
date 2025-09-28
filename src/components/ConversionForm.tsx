@@ -1,17 +1,20 @@
-import styled from 'styled-components'
-import { ErrorMessage } from './ErrorMessage'
-import { formatExchangeRate, formatCurrency } from '@/utils/conversionCalculator'
-import { ExchangeRates, ConversionErrors } from '@/types'
+import styled from 'styled-components';
+import { ErrorMessage } from './ErrorMessage';
+import {
+  formatExchangeRate,
+  formatCurrency,
+} from '@/utils/conversionCalculator';
+import { ExchangeRates, ConversionErrors } from '@/types';
 
 interface ConversionFormProps {
-  amount: string
-  selectedCurrency: string
-  conversionErrors: ConversionErrors
-  exchangeRates: ExchangeRates | null
-  onAmountChange: (amount: string) => void
-  onCurrencyChange: (currency: string) => void
-  isLoading?: boolean
-  className?: string
+  amount: string;
+  selectedCurrency: string;
+  conversionErrors: ConversionErrors;
+  exchangeRates: ExchangeRates | null;
+  onAmountChange: (amount: string) => void;
+  onCurrencyChange: (currency: string) => void;
+  isLoading?: boolean;
+  className?: string;
 }
 
 const FormContainer = styled.div`
@@ -20,7 +23,7 @@ const FormContainer = styled.div`
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-`
+`;
 
 const Title = styled.h3`
   font-size: 1.25rem;
@@ -28,7 +31,7 @@ const Title = styled.h3`
   margin-bottom: 1.5rem;
   color: #333;
   text-align: center;
-`
+`;
 
 const FormGrid = styled.div`
   display: grid;
@@ -39,19 +42,19 @@ const FormGrid = styled.div`
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
   }
-`
+`;
 
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-`
+`;
 
 const Label = styled.label`
   font-size: 0.875rem;
   font-weight: 600;
   color: #495057;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Input = styled.input<{ hasError?: boolean }>`
   padding: 0.75rem;
@@ -70,7 +73,7 @@ const Input = styled.input<{ hasError?: boolean }>`
   &::placeholder {
     color: #6c757d;
   }
-`
+`;
 
 const Select = styled.select<{ hasError?: boolean }>`
   padding: 0.75rem;
@@ -86,25 +89,24 @@ const Select = styled.select<{ hasError?: boolean }>`
     border-color: ${({ hasError }) => (hasError ? '#dc3545' : '#007bff')};
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
   }
-`
+`;
 
 const ErrorMessageStyled = styled(ErrorMessage)`
   margin-bottom: 1rem;
-`
-
+`;
 
 const HelpText = styled.div`
   font-size: 0.75rem;
   color: #6c757d;
   margin-top: 0.25rem;
-`
+`;
 
 const CurrencyDisplay = styled.div`
   font-size: 0.875rem;
   color: #28a745;
   font-weight: 500;
   margin-top: 0.25rem;
-`
+`;
 
 const ConversionResult = styled.div`
   margin-top: 1.5rem;
@@ -113,24 +115,24 @@ const ConversionResult = styled.div`
   border-radius: 8px;
   border: 1px solid #e9ecef;
   font-size: 0.875rem;
-`
+`;
 
 const ConversionAmount = styled.div`
   font-size: 1.125rem;
   font-weight: 600;
   color: #28a745;
   margin-bottom: 0.75rem;
-`
+`;
 
 const ExchangeRateText = styled.div`
   color: #6c757d;
   margin-bottom: 0.5rem;
-`
+`;
 
 const DateInfo = styled.div`
   color: #6c757d;
   font-size: 0.8125rem;
-`
+`;
 
 export function ConversionForm({
   amount,
@@ -140,7 +142,7 @@ export function ConversionForm({
   onAmountChange,
   onCurrencyChange,
   isLoading = false,
-  className
+  className,
 }: ConversionFormProps) {
   if (!exchangeRates) {
     return (
@@ -150,19 +152,24 @@ export function ConversionForm({
           Loading exchange rates...
         </div>
       </FormContainer>
-    )
+    );
   }
 
   const selectedRate = exchangeRates.rates.find(
     rate => rate.code === selectedCurrency
-  )
+  );
 
-  const amountNum = parseFloat(amount)
-  const isValidConversion = !isNaN(amountNum) && amountNum > 0 && selectedRate && !conversionErrors.amount && !conversionErrors.currency
+  const amountNum = parseFloat(amount);
+  const isValidConversion =
+    !isNaN(amountNum) &&
+    amountNum > 0 &&
+    selectedRate &&
+    !conversionErrors.amount &&
+    !conversionErrors.currency;
 
-  let convertedAmount = 0
+  let convertedAmount = 0;
   if (isValidConversion) {
-    convertedAmount = amountNum / (selectedRate.rate / selectedRate.amount)
+    convertedAmount = amountNum / (selectedRate.rate / selectedRate.amount);
   }
 
   return (
@@ -178,14 +185,12 @@ export function ConversionForm({
 
       <FormGrid>
         <FormGroup>
-          <Label htmlFor="amount">
-            Amount (CZK)
-          </Label>
+          <Label htmlFor="amount">Amount (CZK)</Label>
           <Input
             id="amount"
             type="number"
             value={amount}
-            onChange={(e) => onAmountChange(e.target.value)}
+            onChange={e => onAmountChange(e.target.value)}
             placeholder="Enter amount in CZK"
             min="0"
             step="1"
@@ -193,10 +198,19 @@ export function ConversionForm({
             hasError={!!conversionErrors.amount}
             disabled={isLoading}
             aria-invalid={!!conversionErrors.amount}
-            aria-describedby={conversionErrors.amount ? 'amount-error' : undefined}
+            aria-describedby={
+              conversionErrors.amount ? 'amount-error' : undefined
+            }
           />
           {conversionErrors.amount && (
-            <div id="amount-error" style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+            <div
+              id="amount-error"
+              style={{
+                color: '#dc3545',
+                fontSize: '0.875rem',
+                marginTop: '0.25rem',
+              }}
+            >
               {conversionErrors.amount}
             </div>
           )}
@@ -204,33 +218,45 @@ export function ConversionForm({
         </FormGroup>
 
         <FormGroup>
-          <Label htmlFor="currency">
-            To Currency
-          </Label>
+          <Label htmlFor="currency">To Currency</Label>
           <Select
             id="currency"
             value={selectedCurrency}
-            onChange={(e) => onCurrencyChange(e.target.value)}
+            onChange={e => onCurrencyChange(e.target.value)}
             hasError={!!conversionErrors.currency}
             disabled={isLoading}
             aria-invalid={!!conversionErrors.currency}
-            aria-describedby={conversionErrors.currency ? 'currency-error' : undefined}
+            aria-describedby={
+              conversionErrors.currency ? 'currency-error' : undefined
+            }
           >
             <option value="">Select currency</option>
-            {exchangeRates.rates.map((rate) => (
+            {exchangeRates.rates.map(rate => (
               <option key={rate.id} value={rate.code}>
                 {rate.code} - {rate.currency}
               </option>
             ))}
           </Select>
           {conversionErrors.currency && (
-            <div id="currency-error" style={{ color: '#dc3545', fontSize: '0.875rem', marginTop: '0.25rem' }}>
+            <div
+              id="currency-error"
+              style={{
+                color: '#dc3545',
+                fontSize: '0.875rem',
+                marginTop: '0.25rem',
+              }}
+            >
               {conversionErrors.currency}
             </div>
           )}
           {selectedRate && (
             <CurrencyDisplay>
-              {formatExchangeRate(selectedRate.rate, 'CZK', selectedRate.code, selectedRate.amount)}
+              {formatExchangeRate(
+                selectedRate.rate,
+                'CZK',
+                selectedRate.code,
+                selectedRate.amount
+              )}
             </CurrencyDisplay>
           )}
         </FormGroup>
@@ -239,16 +265,23 @@ export function ConversionForm({
       {isValidConversion && (
         <ConversionResult>
           <ConversionAmount>
-            {formatCurrency(amountNum, 'CZK')} = {formatCurrency(convertedAmount, selectedRate.code)}
+            {formatCurrency(amountNum, 'CZK')} ={' '}
+            {formatCurrency(convertedAmount, selectedRate.code)}
           </ConversionAmount>
           <ExchangeRateText>
-            Exchange rate: 1 {selectedRate.code} = {(selectedRate.rate / selectedRate.amount).toFixed(3)} CZK
+            Exchange rate: 1 {selectedRate.code} ={' '}
+            {(selectedRate.rate / selectedRate.amount).toFixed(3)} CZK
           </ExchangeRateText>
           <DateInfo>
-            Rate date: {new Date(exchangeRates.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            Rate date:{' '}
+            {new Date(exchangeRates.date).toLocaleDateString('en-US', {
+              month: 'short',
+              day: 'numeric',
+              year: 'numeric',
+            })}
           </DateInfo>
         </ConversionResult>
       )}
     </FormContainer>
-  )
+  );
 }
