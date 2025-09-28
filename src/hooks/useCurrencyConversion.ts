@@ -90,8 +90,16 @@ export function useCurrencyConversion(
       setErrors({})
       setAmount('')
       setSelectedCurrency('')
+    } else {
+      // Set default values when exchange rates are loaded
+      if (!amount && !selectedCurrency) {
+        setAmount('100')
+        // Find USD currency or fallback to first available currency
+        const usdCurrency = exchangeRates.rates.find(rate => rate.code === 'USD')
+        setSelectedCurrency(usdCurrency?.code || exchangeRates.rates[0]?.code || '')
+      }
     }
-  }, [exchangeRates])
+  }, [exchangeRates, amount, selectedCurrency])
 
   const setAmountHandler = useCallback((newAmount: string) => {
     setAmount(newAmount)
