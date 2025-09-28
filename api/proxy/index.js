@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
   try {
     // CNB Exchange Rates API endpoint from project environment
-    const CNB_API_URL = 'https://api.cnb.cz/cnbapi/exrates/daily';
+    const CNB_API_URL = 'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt';
 
     console.log(`Proxying CNB exchange rates request`);
 
