@@ -29,7 +29,7 @@ export function calculateCurrencyConversion(input: ConversionInput): ConversionR
       throw new Error(`Invalid exchange rate for ${toCurrency}: ${targetRate.rate}`)
     }
 
-    const targetAmount = amount / targetRate.rate
+    const targetAmount = (amount / targetRate.rate) * targetRate.amount
 
     return {
       originalAmount: amount,
@@ -52,7 +52,7 @@ export function calculateCurrencyConversion(input: ConversionInput): ConversionR
       throw new Error(`Invalid exchange rate for ${fromCurrency}: ${sourceRate.rate}`)
     }
 
-    const targetAmount = amount * sourceRate.rate
+    const targetAmount = (amount * sourceRate.rate) / sourceRate.amount
 
     return {
       originalAmount: amount,
@@ -73,12 +73,21 @@ export function findRateByCode(rates: CurrencyRate[], currencyCode: string): Cur
 }
 
 export function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency === 'CZK' ? 'CZK' : 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: currency === 'CZK' ? 2 : 4
-  }).format(amount)
+  try {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: currency === 'CZK' ? 2 : 4
+    }).format(amount)
+  } catch (error) {
+    // Fallback to currency code if Intl doesn't support the currency
+    return new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: currency === 'CZK' ? 2 : 4
+    }).format(amount) + ' ' + currency
+  }
 }
 
 export function formatExchangeRate(rate: number, fromCurrency: string, toCurrency: string): string {
