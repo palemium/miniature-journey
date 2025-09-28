@@ -32,6 +32,11 @@ export function parseCnbTextResponse(text: string): CnbParsedData {
     const line = lines[i].trim()
     if (!line) continue
 
+    // Skip header line if present
+    if (line === 'Country|Currency|Amount|Code|Rate' || line === 'země|měna|množství|kód|kurz') {
+      continue
+    }
+
     const parts = line.split('|').map(part => part.trim())
 
     if (parts.length !== 5) {
