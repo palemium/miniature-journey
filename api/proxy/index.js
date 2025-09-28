@@ -50,7 +50,7 @@ export default async function handler(req, res) {
 
     // Set appropriate content type and headers
     res.setHeader('Content-Type', 'text/plain;charset=UTF-8');
-    res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+    res.setHeader('Cache-Control', 'public, max-age=300'); // Cache for 5 minutes
     res.setHeader('X-CNB-API-Proxy', 'true');
     res.setHeader('X-Fetched-At', new Date().toISOString());
 
