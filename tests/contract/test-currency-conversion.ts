@@ -31,6 +31,7 @@ describe('Currency Conversion Calculation Contract', () => {
       targetAmount: expect.closeTo(42.94, 0.01),
       targetCurrency: 'USD',
       exchangeRate: 23.285,
+      currencyAmount: 1,
       conversionDate: expect.any(Date),
       timestamp: expect.any(Date)
     })
@@ -61,6 +62,7 @@ describe('Currency Conversion Calculation Contract', () => {
     // Calculation: (1000 / 6.399) * 100 = 15626.44
     expect(result.targetAmount).toBeCloseTo(15626.44, 0.01)
     expect(result.exchangeRate).toBe(6.399)
+    expect(result.currencyAmount).toBe(100)
   })
 
   it('should handle JPY (100 units) conversion correctly', () => {
@@ -88,6 +90,7 @@ describe('Currency Conversion Calculation Contract', () => {
     // Calculation: (1000 / 13.919) * 100 = 7183.5
     expect(result.targetAmount).toBeCloseTo(7183.5, 0.1)
     expect(result.exchangeRate).toBe(13.919)
+    expect(result.currencyAmount).toBe(100)
   })
 
   it('should handle ISK (100 units) conversion correctly', () => {
@@ -115,6 +118,7 @@ describe('Currency Conversion Calculation Contract', () => {
     // Calculation: (500 / 17.134) * 100 = 2918.5
     expect(result.targetAmount).toBeCloseTo(2918.5, 0.1)
     expect(result.exchangeRate).toBe(17.134)
+    expect(result.currencyAmount).toBe(100)
   })
 
   it('should handle INR (100 units) conversion correctly', () => {
@@ -142,6 +146,7 @@ describe('Currency Conversion Calculation Contract', () => {
     // Calculation: (2000 / 23.490) * 100 = 8514.26
     expect(result.targetAmount).toBeCloseTo(8514.26, 0.01)
     expect(result.exchangeRate).toBe(23.490)
+    expect(result.currencyAmount).toBe(100)
   })
 
   it('should handle reverse conversion from multi-unit currency to CZK', () => {
@@ -169,6 +174,7 @@ describe('Currency Conversion Calculation Contract', () => {
     // Calculation: (1000 * 13.919) / 100 = 139.19
     expect(result.targetAmount).toBeCloseTo(139.19, 0.01)
     expect(result.exchangeRate).toBe(13.919)
+    expect(result.currencyAmount).toBe(100)
   })
 
   it('should handle zero amount', () => {
@@ -194,6 +200,7 @@ describe('Currency Conversion Calculation Contract', () => {
     const result = calculateCurrencyConversion(request)
 
     expect(result.targetAmount).toBe(0)
+    expect(result.currencyAmount).toBe(1)
   })
 
   it('should handle very small amounts', () => {
@@ -219,6 +226,7 @@ describe('Currency Conversion Calculation Contract', () => {
     const result = calculateCurrencyConversion(request)
 
     expect(result.targetAmount).toBeCloseTo(0.000429, 0.000001)
+    expect(result.currencyAmount).toBe(1)
   })
 
   it('should validate input parameters', () => {

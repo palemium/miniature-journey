@@ -20,6 +20,7 @@ export interface ConversionResult {
   targetAmount: number
   targetCurrency: string
   exchangeRate: number
+  currencyAmount: number // The amount of foreign currency units the rate applies to
   conversionDate: Date
   timestamp: Date
 }

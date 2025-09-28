@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Button } from './Button'
+import { formatCurrency, formatExchangeRate } from '@/utils/conversionCalculator'
 import type { ConversionResult as ConversionResultType } from '@/types'
 
 interface ConversionResultProps {
@@ -139,12 +140,7 @@ const Timestamp = styled.div`
 `
 
 function formatAmount(amount: number, currency: string): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: currency === 'CZK' ? 'CZK' : 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: currency === 'CZK' ? 2 : 4
-  }).format(amount)
+  return formatCurrency(amount, currency)
 }
 
 function formatDateTime(date: Date): string {
@@ -219,7 +215,7 @@ export function ConversionResult({
 
         <ExchangeRateInfo>
           <ExchangeRateText>
-            Exchange rate: 1 {result.targetCurrency} = {result.exchangeRate.toFixed(3)} CZK
+            Exchange rate: {formatExchangeRate(result.exchangeRate, 'CZK', result.targetCurrency, result.currencyAmount)}
           </ExchangeRateText>
           <DateInfo>Rate date: {formatDate(result.conversionDate)}</DateInfo>
         </ExchangeRateInfo>
@@ -235,7 +231,7 @@ export function ConversionResult({
           </DetailItem>
           <DetailItem>
             <DetailLabel>Exchange Rate</DetailLabel>
-            <DetailValue>{result.exchangeRate.toFixed(3)} CZK</DetailValue>
+            <DetailValue>{formatExchangeRate(result.exchangeRate, 'CZK', result.targetCurrency, result.currencyAmount)}</DetailValue>
           </DetailItem>
           <DetailItem>
             <DetailLabel>Rate Date</DetailLabel>
