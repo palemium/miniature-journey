@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { Button } from './Button'
 import { ErrorMessage } from './ErrorMessage'
+import { formatExchangeRate } from '@/utils/conversionCalculator'
 import { ExchangeRates, ConversionErrors } from '@/types'
 
 interface ConversionFormProps {
@@ -202,7 +203,7 @@ export function ConversionForm({
           )}
           {selectedRate && (
             <CurrencyDisplay>
-              1 {selectedRate.code} = {selectedRate.rate.toFixed(3)} CZK
+              {formatExchangeRate(selectedRate.rate, 'CZK', selectedRate.code, selectedRate.amount)}
             </CurrencyDisplay>
           )}
         </FormGroup>
