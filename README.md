@@ -103,7 +103,8 @@ tests/
 
 The application uses the Czech National Bank's exchange rates API:
 
-- **Endpoint**: `https://api.cnb.cz/cnbapi/exrates/daily`
+- **Endpoint**: `https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt` (text format)
+- **Proxy**: `/api/proxy` (CORS-enabled proxy for development)
 - **Rate Limit**: Free public API with reasonable usage limits
 - **Data**: Daily exchange rates against CZK
 - **Caching**: Exchange rates are cached for 10 minutes to reduce API calls
@@ -170,46 +171,8 @@ npm run preview
 
 The build output will be in the `dist/` directory.
 
-### Static Deployment
-
-The application can be deployed to any static hosting service:
-
-- Vercel
-- Netlify
-- GitHub Pages
-- Any static web server
-
-## Browser Support
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run tests and linting (`npm run lint && npm test`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
 ## Acknowledgments
 
 - Exchange rates provided by the [Czech National Bank](https://www.cnb.cz/)
 - Built with modern web technologies and best practices
 - Follows Test-Driven Development (TDD) principles
-
-## Support
-
-For issues and questions:
-
-- Check the [Issues](https://github.com/your-repo/issues) page
-- Review the project documentation
-- Contact the development team
