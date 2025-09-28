@@ -3,7 +3,10 @@ export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, X-Requested-With'
+  );
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 
   // Handle preflight requests
@@ -15,13 +18,14 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({
       error: 'Method not allowed',
-      message: 'Only GET requests are supported for CNB Exchange Rates API'
+      message: 'Only GET requests are supported for CNB Exchange Rates API',
     });
   }
 
   try {
     // CNB Exchange Rates API endpoint from project environment
-    const CNB_API_URL = 'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt';
+    const CNB_API_URL =
+      'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt';
 
     console.log(`Proxying CNB exchange rates request`);
 
@@ -30,10 +34,10 @@ export default async function handler(req, res) {
       method: 'GET',
       headers: {
         'User-Agent': 'CNB-Exchange-Rates-Proxy/1.0',
-        'Accept': 'text/plain;charset=UTF-8',
+        Accept: 'text/plain;charset=UTF-8',
         'Accept-Language': 'en-US,en;q=0.9',
-        'Cache-Control': 'no-cache'
-      }
+        'Cache-Control': 'no-cache',
+      },
     });
 
     if (!response.ok) {
@@ -56,7 +60,6 @@ export default async function handler(req, res) {
 
     // Forward the CNB API response
     res.status(200).send(textData);
-
   } catch (error) {
     console.error('CNB API proxy error:', error);
 
@@ -65,7 +68,7 @@ export default async function handler(req, res) {
       error: 'Failed to fetch CNB exchange rates',
       message: error.message,
       timestamp: new Date().toISOString(),
-      suggestion: 'Please try again later or check CNB API status'
+      suggestion: 'Please try again later or check CNB API status',
     });
   }
 }

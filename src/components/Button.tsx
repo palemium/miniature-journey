@@ -1,22 +1,22 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 interface ButtonProps {
-  children: React.ReactNode
-  variant?: 'primary' | 'secondary' | 'ghost'
-  size?: 'small' | 'medium' | 'large'
-  disabled?: boolean
-  onClick?: () => void
-  type?: 'button' | 'submit' | 'reset'
-  className?: string
-  'aria-label'?: string
-  $marginTop?: string
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'small' | 'medium' | 'large';
+  disabled?: boolean;
+  onClick?: () => void;
+  type?: 'button' | 'submit' | 'reset';
+  className?: string;
+  'aria-label'?: string;
+  $marginTop?: string;
 }
 
 const StyledButton = styled.button<{
-  variant: 'primary' | 'secondary' | 'ghost'
-  size: 'small' | 'medium' | 'large'
-  disabled: boolean
-  $marginTop?: string
+  variant: 'primary' | 'secondary' | 'ghost';
+  size: 'small' | 'medium' | 'large';
+  disabled: boolean;
+  $marginTop?: string;
 }>`
   display: inline-flex;
   align-items: center;
@@ -41,23 +41,23 @@ const StyledButton = styled.button<{
           padding: 0.375rem 0.75rem;
           font-size: 0.875rem;
           min-height: 2rem;
-        `
+        `;
       case 'large':
         return `
           padding: 0.75rem 1.5rem;
           font-size: 1.125rem;
           min-height: 3rem;
-        `
+        `;
       default:
         return `
           padding: 0.5rem 1rem;
           font-size: 1rem;
           min-height: 2.5rem;
-        `
+        `;
     }
   }}
 
-  ${({ $marginTop }) => $marginTop ? `margin-top: ${$marginTop};` : ''}
+  ${({ $marginTop }) => ($marginTop ? `margin-top: ${$marginTop};` : '')}
 
   ${({ variant }) => {
     switch (variant) {
@@ -76,7 +76,7 @@ const StyledButton = styled.button<{
             outline: 2px solid #007bff;
             outline-offset: 2px;
           }
-        `
+        `;
       case 'secondary':
         return `
           background-color: #6c757d;
@@ -92,7 +92,7 @@ const StyledButton = styled.button<{
             outline: 2px solid #6c757d;
             outline-offset: 2px;
           }
-        `
+        `;
       case 'ghost':
         return `
           background-color: transparent;
@@ -108,12 +108,12 @@ const StyledButton = styled.button<{
             outline: 2px solid #6c757d;
             outline-offset: 2px;
           }
-        `
+        `;
       default:
-        return ''
+        return '';
     }
   }}
-`
+`;
 
 export function Button({
   children,
@@ -139,5 +139,5 @@ export function Button({
     >
       {children}
     </StyledButton>
-  )
+  );
 }

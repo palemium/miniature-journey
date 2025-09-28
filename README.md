@@ -29,6 +29,7 @@ A modern, responsive web application for converting Czech Koruna (CZK) to foreig
 ## Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd miniature-journey
@@ -46,6 +47,7 @@ A modern, responsive web application for converting Czech Koruna (CZK) to foreig
 ## Development
 
 1. **Start the development server**
+
    ```bash
    npm run dev
    # or
@@ -100,6 +102,7 @@ tests/
 ## API Integration
 
 The application uses the Czech National Bank's exchange rates API:
+
 - **Endpoint**: `https://api.cnb.cz/cnbapi/exrates/daily`
 - **Rate Limit**: Free public API with reasonable usage limits
 - **Data**: Daily exchange rates against CZK
@@ -126,18 +129,6 @@ npm run test:ci
 - **Integration Tests**: Component interaction and API integration tests
 - **Mocking**: Comprehensive mocking for CNB API and browser APIs
 - **Setup**: Global test configuration in `tests/setup.ts`
-
-## Environment Variables
-
-Create a `.env.local` file for environment-specific configuration:
-
-```env
-# Optional: API base URL (defaults to CNB public API)
-VITE_CNB_API_URL=https://api.cnb.cz/cnbapi/exrates/daily
-
-# Optional: Cache duration in milliseconds (defaults to 10 minutes)
-VITE_CACHE_DURATION=600000
-```
 
 ## Code Quality
 
@@ -182,6 +173,7 @@ The build output will be in the `dist/` directory.
 ### Static Deployment
 
 The application can be deployed to any static hosting service:
+
 - Vercel
 - Netlify
 - GitHub Pages
@@ -217,6 +209,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For issues and questions:
+
 - Check the [Issues](https://github.com/your-repo/issues) page
 - Review the project documentation
 - Contact the development team

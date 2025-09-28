@@ -1,37 +1,37 @@
-import styled from 'styled-components'
-import { Button } from './Button'
-import { ErrorMessage } from './ErrorMessage'
-import { CurrencyList } from './CurrencyList'
-import { ConversionForm } from './ConversionForm'
-import { useCurrencyRates, useCurrencyConversion } from '@/hooks'
+import styled from 'styled-components';
+import { Button } from './Button';
+import { ErrorMessage } from './ErrorMessage';
+import { CurrencyList } from './CurrencyList';
+import { ConversionForm } from './ConversionForm';
+import { useCurrencyRates, useCurrencyConversion } from '@/hooks';
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
-`
+`;
 
 const Header = styled.header`
   text-align: center;
   margin-bottom: 3rem;
-`
+`;
 
 const Title = styled.h1`
   font-size: 2.5rem;
   font-weight: 700;
   color: #333;
   margin-bottom: 0.5rem;
-`
+`;
 
 const Subtitle = styled.p`
   font-size: 1.125rem;
   color: #6c757d;
   margin-bottom: 2rem;
-`
+`;
 
 const RefreshButton = styled(Button)`
   margin-bottom: 2rem;
-`
+`;
 
 const StatsContainer = styled.div`
   display: flex;
@@ -43,7 +43,7 @@ const StatsContainer = styled.div`
   @media (max-width: 768px) {
     gap: 1rem;
   }
-`
+`;
 
 const StatItem = styled.div`
   text-align: center;
@@ -52,19 +52,19 @@ const StatItem = styled.div`
   border-radius: 8px;
   border: 1px solid #dee2e6;
   min-width: 150px;
-`
+`;
 
 const StatValue = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
   color: #007bff;
   margin-bottom: 0.25rem;
-`
+`;
 
 const StatLabel = styled.div`
   font-size: 0.875rem;
   color: #6c757d;
-`
+`;
 
 const ContentGrid = styled.div`
   display: grid;
@@ -74,17 +74,17 @@ const ContentGrid = styled.div`
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
   }
-`
+`;
 
 const MainContent = styled.div`
   display: flex;
   flex-direction: column;
-`
+`;
 
 const SideContent = styled.div`
   display: flex;
   flex-direction: column;
-`
+`;
 
 const LoadingOverlay = styled.div`
   position: fixed;
@@ -97,30 +97,30 @@ const LoadingOverlay = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-`
+`;
 
 const LoadingContent = styled.div`
   background-color: white;
   padding: 2rem;
   border-radius: 8px;
   text-align: center;
-`
+`;
 
 function formatLastUpdated(date: Date | null): string {
-  if (!date) return 'Never'
+  if (!date) return 'Never';
 
-  const now = new Date()
-  const diffMs = now.getTime() - date.getTime()
-  const diffMins = Math.floor(diffMs / (1000 * 60))
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / (1000 * 60));
 
-  if (diffMins < 1) return 'Just now'
-  if (diffMins < 60) return `${diffMins} min ago`
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins} min ago`;
 
-  const diffHours = Math.floor(diffMins / 60)
-  if (diffHours < 24) return `${diffHours}h ago`
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
 
-  const diffDays = Math.floor(diffHours / 24)
-  return `${diffDays}d ago`
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays}d ago`;
 }
 
 export function CurrencyConverter() {
@@ -130,26 +130,21 @@ export function CurrencyConverter() {
     error: ratesError,
     refetch,
     isRefreshing,
-    lastFetchTime
+    lastFetchTime,
   } = useCurrencyRates({
     autoFetch: true,
-    refreshInterval: 5 * 60 * 1000 // 5 minutes
-  })
+    refreshInterval: 5 * 60 * 1000, // 5 minutes
+  });
 
-  const {
-    amount,
-    setAmount,
-    selectedCurrency,
-    setCurrency,
-    errors
-  } = useCurrencyConversion(exchangeRates, {
-    autoCalculate: true,
-    debounceMs: 300
-  })
+  const { amount, setAmount, selectedCurrency, setCurrency, errors } =
+    useCurrencyConversion(exchangeRates, {
+      autoCalculate: true,
+      debounceMs: 300,
+    });
 
   const dismissError = () => {
-    refetch()
-  }
+    refetch();
+  };
 
   if (isRatesLoading && !exchangeRates) {
     return (
@@ -163,14 +158,16 @@ export function CurrencyConverter() {
           <div style={{ fontSize: '1.25rem' }}>Loading currency rates...</div>
         </div>
       </Container>
-    )
+    );
   }
 
   return (
     <Container>
       <Header>
         <Title>Currency Converter</Title>
-        <Subtitle>Convert Czech Koruna to foreign currencies using CNB exchange rates</Subtitle>
+        <Subtitle>
+          Convert Czech Koruna to foreign currencies using CNB exchange rates
+        </Subtitle>
 
         <RefreshButton
           variant="secondary"
@@ -239,5 +236,5 @@ export function CurrencyConverter() {
         </LoadingOverlay>
       )}
     </Container>
-  )
+  );
 }
