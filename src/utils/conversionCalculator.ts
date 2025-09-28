@@ -37,6 +37,7 @@ export function calculateCurrencyConversion(input: ConversionInput): ConversionR
       targetAmount: Number(targetAmount.toFixed(4)),
       targetCurrency: toCurrency,
       exchangeRate: targetRate.rate,
+      currencyAmount: targetRate.amount,
       conversionDate: exchangeRates.date,
       timestamp: new Date()
     }
@@ -60,6 +61,7 @@ export function calculateCurrencyConversion(input: ConversionInput): ConversionR
       targetAmount: Number(targetAmount.toFixed(2)),
       targetCurrency: toCurrency,
       exchangeRate: sourceRate.rate,
+      currencyAmount: sourceRate.amount,
       conversionDate: exchangeRates.date,
       timestamp: new Date()
     }
@@ -90,11 +92,11 @@ export function formatCurrency(amount: number, currency: string): string {
   }
 }
 
-export function formatExchangeRate(rate: number, fromCurrency: string, toCurrency: string): string {
+export function formatExchangeRate(rate: number, fromCurrency: string, toCurrency: string, amount: number = 1): string {
   if (fromCurrency === 'CZK') {
-    return `1 ${toCurrency} = ${rate.toFixed(3)} CZK`
+    return `${amount} ${toCurrency} = ${rate.toFixed(3)} CZK`
   }
-  return `1 ${fromCurrency} = ${rate.toFixed(3)} CZK`
+  return `${amount} ${fromCurrency} = ${rate.toFixed(3)} CZK`
 }
 
 export function validateConversionInput(
