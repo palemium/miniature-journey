@@ -1,7 +1,7 @@
 import { ExchangeRates } from '@/types'
 import { parseCnbTextResponse, createExchangeRates } from '@/utils/cnbParser'
 
-const CNB_API_URL = 'https://www.cnb.cz/en/financial-markets/foreign-exchange-market/central-bank-exchange-rate-fixing/central-bank-exchange-rate-fixing/daily.txt'
+const CNB_API_URL = '/api/proxy'
 
 export interface CnbApiError {
   type: 'network' | 'http' | 'parse' | 'unknown'
