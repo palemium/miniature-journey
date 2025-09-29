@@ -21,7 +21,41 @@ export function parseCnbTextResponse(text: string): CnbParsedData {
   }
 
   const [, day, month, year] = dateMatch;
-  const date = new Date(`${year} ${month} ${day}`);
+
+  // Create date using UTC to avoid iOS Safari date parsing issues
+  const monthMap: { [key: string]: number } = {
+    Jan: 0,
+    Feb: 1,
+    Mar: 2,
+    Apr: 3,
+    May: 4,
+    Jun: 5,
+    Jul: 6,
+    Aug: 7,
+    Sep: 8,
+    Oct: 9,
+    Nov: 10,
+    Dec: 11,
+    led: 0,
+    úno: 1,
+    bře: 2,
+    dub: 3,
+    kvě: 4,
+    čvn: 5,
+    čvc: 6,
+    srp: 7,
+    zář: 8,
+    říj: 9,
+    lis: 10,
+    pro: 11,
+  };
+
+  const monthNum = monthMap[month.substring(0, 3)];
+  if (monthNum === undefined) {
+    throw new Error(`Invalid month format: ${month}`);
+  }
+
+  const date = new Date(Date.UTC(parseInt(year), monthNum, parseInt(day)));
 
   if (isNaN(date.getTime())) {
     throw new Error('Invalid date in response');
