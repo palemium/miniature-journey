@@ -116,38 +116,3 @@ export function formatExchangeRate(
   }
   return `${amount} ${fromCurrency} = ${rate.toFixed(3)} CZK`;
 }
-
-export function validateConversionInput(
-  amount: string,
-  currencyCode: string,
-  exchangeRates: ExchangeRates | null
-): { isValid: boolean; errors: Record<string, string> } {
-  const errors: Record<string, string> = {};
-
-  if (!amount || amount.trim() === '') {
-    errors.amount = 'Amount is required';
-  } else {
-    const amountNum = parseFloat(amount);
-    if (isNaN(amountNum)) {
-      errors.amount = 'Amount must be a valid number';
-    } else if (amountNum <= 0) {
-      errors.amount = 'Amount must be positive';
-    } else if (amountNum > 1000000) {
-      errors.amount = 'Amount cannot exceed 1,000,000';
-    }
-  }
-
-  if (!currencyCode || currencyCode.trim() === '') {
-    errors.currency = 'Currency is required';
-  } else if (
-    exchangeRates &&
-    !findRateByCode(exchangeRates.rates, currencyCode)
-  ) {
-    errors.currency = 'Currency not found';
-  }
-
-  return {
-    isValid: Object.keys(errors).length === 0,
-    errors,
-  };
-}

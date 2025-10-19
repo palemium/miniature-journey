@@ -9,7 +9,6 @@ export {
   findRateByCode,
   formatCurrency,
   formatExchangeRate,
-  validateConversionInput,
   type ConversionInput,
   type ConversionCalculationError,
 } from './conversionCalculator';
@@ -18,7 +17,7 @@ export {
   validateCurrencyRate,
   validateCurrencyCode,
   validateAmount,
-  validateConversionInput as validateConversionInputUtil,
+  validateConversionInput,
   sanitizeCurrencyCode,
   sanitizeAmount,
   isValidDate,

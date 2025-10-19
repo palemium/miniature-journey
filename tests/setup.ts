@@ -12,7 +12,10 @@ Object.defineProperty(globalThis, 'fetch', {
 vi.mock('styled-components', () => {
   const createStyledComponent = (tag: string) => {
     return () => {
-      const MockComponent = ({ children, ...props }: any) => {
+      const MockComponent = ({
+        children,
+        ...props
+      }: React.HTMLAttributes<HTMLElement> & { [key: string]: unknown }) => {
         // Filter out styled-components specific props and props starting with $
         const filteredProps = { ...props };
         delete filteredProps.hasError;
@@ -49,7 +52,7 @@ vi.mock('styled-components', () => {
       if (typeof prop === 'string') return target(prop);
       return target(prop.toString());
     },
-  }) as any;
+  }) as unknown;
 
   return {
     default: styled,

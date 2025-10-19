@@ -62,7 +62,9 @@ describe('useCurrencyConversion Hook', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.errors.amount).toBe('Amount must be positive');
+      expect(result.current.errors.amount).toBe(
+        'Amount must contain only numbers and at most one decimal point'
+      );
       expect(result.current.conversionResult).toBeNull();
     });
   });
@@ -78,7 +80,9 @@ describe('useCurrencyConversion Hook', () => {
     });
 
     await waitFor(() => {
-      expect(result.current.errors.currency).toBe('Currency not found');
+      expect(result.current.errors.currency).toBe(
+        'Invalid currency code format (must be 3 letters)'
+      );
       expect(result.current.conversionResult).toBeNull();
     });
   });

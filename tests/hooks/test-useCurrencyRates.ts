@@ -29,7 +29,7 @@ describe('useCurrencyRates Hook', () => {
       text: () =>
         Promise.resolve(`27 Sep 2024
 USA|dollar|1|USD|23.285`),
-    } as any);
+    } as Response);
 
     const { result } = renderHook(() => useCurrencyRates());
 
@@ -69,7 +69,7 @@ USA|dollar|1|USD|23.285`),
       text: () =>
         Promise.resolve(`27 Sep 2024
 USA|dollar|1|USD|23.285`),
-    } as any);
+    } as Response);
 
     const { result } = renderHook(() => useCurrencyRates());
 

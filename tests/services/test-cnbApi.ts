@@ -14,7 +14,7 @@ EMU|euro|1|EUR|25.285`;
     vi.mocked(global.fetch).mockResolvedValueOnce({
       ok: true,
       text: () => Promise.resolve(mockResponse),
-    } as any);
+    } as Response);
 
     const result = await fetchExchangeRates();
 
@@ -49,7 +49,7 @@ EMU|euro|1|EUR|25.285`;
       ok: false,
       status: 404,
       statusText: 'Not Found',
-    } as any);
+    } as Response);
 
     await expect(fetchExchangeRates()).rejects.toThrow(
       'HTTP error! status: 404'
@@ -60,7 +60,7 @@ EMU|euro|1|EUR|25.285`;
     vi.mocked(global.fetch).mockResolvedValueOnce({
       ok: true,
       text: () => Promise.resolve('invalid response format'),
-    } as any);
+    } as Response);
 
     await expect(fetchExchangeRates()).rejects.toThrow();
   });

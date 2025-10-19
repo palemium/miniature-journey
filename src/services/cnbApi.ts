@@ -63,10 +63,6 @@ export class CnbApiService {
       return await this.fetchExchangeRates();
     } catch (error) {
       if (this.isCnbApiError(error) && error.type === 'parse') {
-        console.warn(
-          'CNB API parsing error, attempting fallback:',
-          error.message
-        );
         throw error;
       }
       throw error;

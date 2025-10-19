@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { ExchangeRates, ConversionResult, ConversionErrors } from '@/types';
-import {
-  calculateCurrencyConversion,
-  validateConversionInput,
-} from '@/utils/conversionCalculator';
+import { calculateCurrencyConversion } from '@/utils/conversionCalculator';
+import { validateConversionInput } from '@/utils/validation';
 import { sanitizeAmount, sanitizeCurrencyCode } from '@/utils/validation';
 
 interface UseCurrencyConversionOptions {
